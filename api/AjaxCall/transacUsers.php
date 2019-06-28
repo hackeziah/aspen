@@ -5,6 +5,7 @@ $action = $_GET['action'];
 $result = [];
 
 switch($action) {
+
 	case 'getUsers':
 			$users = new User();
 			$result = $users->getUsers();
@@ -30,13 +31,6 @@ switch($action) {
 			echo json_encode($result);
 			break;
 
-	case 'getSingleUser':
-			$id = isset($_POST['User_Id']) ? $_POST['User_Id'] : die;
-			$users = new User();
-			$result = $users->getSingleUser($id);
-			echo json_encode($result);
-			break;
-
 	case 'deleteSingleUser':
 			$id = isset($_POST['User_Id']) ? $_POST['User_Id'] : die;
 			$users = new User();
@@ -54,10 +48,8 @@ switch($action) {
 				'name' => isset($_POST['name']) ? $_POST['name'] : '',
 				'department' => isset($_POST['department']) ? $_POST['department'] : ''
 			];
-
 			$users = new User();
 			$result = $users->updateUser($id, $userdata);
-
 			echo json_encode($result);
 			break;
 

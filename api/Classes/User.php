@@ -29,6 +29,8 @@ class User {
 		return $usersQuery;
 
 	}
+	// `User_Id`, `Employee_Id`, `Lastname`, `Firstname`, `Middlename`,
+	//  `Department_Id`, `Unit_Id`, `Position_Id`, `Username`, `Pwd`, `User_Type_Id`
 
 	public function addUser($Username, $Pword,$User_Type,$name,$department)
 	{
@@ -54,7 +56,6 @@ class User {
 
 	public function success()
 	{
-
 	}
 
 
