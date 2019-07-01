@@ -5,9 +5,13 @@ class User {
 
 	public function getUsers()
 	{
-		$sql = " SELECT * FROM users ";
+		$sql = " SELECT u.Employee_Id, u.Lastname, u.Firstname, u.Middlename, a.Name,b.Unit_Name,c.Position_Name,u.Username,u.Pwd,d.Name
+		FROM users u
+		INNER JOIN departments a ON u.Department_Id = a.Department_Id
+		INNER JOIN units b ON u.Unit_Id = b.Unit_Id
+		INNER JOIN positions c ON u.Position_Id = c.Position_Id
+		INNER JOIN user_types d ON u.User_Type_Id = d.User_Type_Id ";
 		$usersQuery = (new Database())->query($sql);
-
 		return $usersQuery;
 	}
 
@@ -23,20 +27,22 @@ class User {
 	public function deleteSingleUser($id)
 	{
 		$sql = " DELETE FROM users WHERE User_Id = $id";
-
 		$usersQuery = (new Database())->query($sql, [$id],'delete');
 
 		return $usersQuery;
 
 	}
-	// `User_Id`, `Employee_Id`, `Lastname`, `Firstname`, `Middlename`,
-	//  `Department_Id`, `Unit_Id`, `Position_Id`, `Username`, `Pwd`, `User_Type_Id`
 
-	public function addUser($Username, $Pword,$User_Type,$name,$department)
+
+	public function addUser($data)
 	{
-		$sql = " INSERT INTO users(Username, Pword, User_Type, name, department) VALUE(?, ?, ?, ?, ?)";
+		$sql = " INSERT INTO users(Employee_Id, Lastname, Firstname, Middlename, Department_Id, Unit_Id, Position_Id, Username, Pwd, User_Type_Id) VALUE(?, ?, ?, ?, ?, ?, ?, ?, ? ,?)";
 
-		$usersQuery = (new Database())->query($sql, [$Username, $Pword,$User_Type,$name,$department], 'insert');
+		$usersQuery = (new Database())->query($sql,
+		[$data['Employee_Id'], $data['Lastname'] , $data['Firstname'] ,
+		$data['Middlename'],$data['Department_Id'], $data['Unit_Id'], $data['Position_Id'],$data['Username'],
+		$data['Pwd'],$data['User_Type_id']],
+		'insert');
 
 		return $usersQuery;
 	}
@@ -56,6 +62,8 @@ class User {
 
 	public function success()
 	{
+		echo "Sample";
+
 	}
 
 

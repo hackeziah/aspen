@@ -20,14 +20,21 @@ switch($action) {
 			break;
 
 	case 'addUser':
-			$Username = isset($_POST['Username']) ? $_POST['Username'] : die;
-			$Pword = isset($_POST['Pword']) ? $_POST['Pword'] : die;
-			$User_Type = isset($_POST['User_Type']) ? $_POST['User_Type'] : die;
-			$name = isset($_POST['name']) ? $_POST['name'] : die;
-			$department = isset($_POST['department']) ? $_POST['department'] : die;
-
+			$data =[
+					'Employee_Id' => isset($_POST['Employee_Id']) ? $_POST['Employee_Id'] : die,
+					'Lastname' => isset($_POST['Lastname']) ? $_POST['Lastname'] : die,
+					'Firstname' => isset($_POST['Firstname']) ? $_POST['Firstname'] : die,
+					'Middlename' => isset($_POST['Middlename']) ? $_POST['Middlename'] : die,
+					'Department_Id' => isset($_POST['Department_Id']) ? $_POST['Department_Id'] : die,
+					'Unit_Id' => isset($_POST['Unit_Id']) ? $_POST['Unit_Id'] : die,
+					'Position_Id' => isset($_POST['Position_Id']) ? $_POST['Position_Id'] : die,
+					'Username' => isset($_POST['Username']) ? $_POST['Username'] : die,
+					'Pwd' => isset($_POST['Pwd']) ? $_POST['Pwd'] : die,
+					'User_Type_Id' => isset($_POST['User_Type_Id']) ? $_POST['User_Type_Id'] : die
+			];
 			$users = new User();
-			$result = $users->addUser($Username, $Pword,$User_Type,$name,$department);
+			$result = $users->addUser($data);
+
 			echo json_encode($result);
 			break;
 
