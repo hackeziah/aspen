@@ -1,11 +1,14 @@
 <?php
+header('Access-Control-Allow-Origin: *');
+header('Content-Type: application/json');
+// header('Access-Control-Allow-Methods: POST');
+header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Content-Type,Access-Control-Allow-Methods, Authorization, X-Requested-With');
 
 include '..\Classes\Priority.php';
 
-$action = $_GET['action'];
+$action = isset($_GET['action']) ? $_GET['action'] : die;
 $result = [];
 
-        // `Priority_Id`, `Level`, `Days`, `Hours`, `Minutes`
 switch($action) {
 
 
@@ -14,7 +17,6 @@ switch($action) {
 			$result = $priority->getPriority();
 			echo json_encode($result);
   		break;
-
 
 	case 'updatePriority':
 			$id = isset($_POST['Priority_Id']) ? $_POST['Priority_Id'] : die;

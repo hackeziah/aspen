@@ -4,10 +4,6 @@ include '..\..\config\Database.php';
 class Priority{
 
 
-
-        // `Priority_Id`, `Level`, `Days`, `Hours`, `Minutes`
-        //getting Priority
-
         public function getPriority()
         {
             $sql = " SELECT * FROM priorities ";

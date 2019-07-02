@@ -17,8 +17,7 @@ class User {
 
 	public function getSingleUser($id)
 	{
-		$sql = " SELECT * FROM users WHERE User_Id = $id";
-
+		$sql = "SELECT * FROM users WHERE User_id = $id";
 		$usersQuery = (new Database())->query($sql, [$id],'select');
 
 		return $usersQuery;
@@ -33,27 +32,26 @@ class User {
 
 	}
 
-
 	public function addUser($data)
 	{
-		$sql = " INSERT INTO users(Employee_Id, Lastname, Firstname, Middlename, Department_Id, Unit_Id, Position_Id, Username, Pwd, User_Type_Id) VALUE(?, ?, ?, ?, ?, ?, ?, ?, ? ,?)";
+		$sql = " INSERT INTO users(Employee_Id , Lastname, Firstname, Middlename, Department_Id, Unit_Id, Position_Id, Username, Pwd, User_Type_Id) VALUE(?, ?, ?, ?, ?, ?, ?, ?, ? ,?)";
 
 		$usersQuery = (new Database())->query($sql,
-		[$data['Employee_Id'], $data['Lastname'] , $data['Firstname'] ,
-		$data['Middlename'],$data['Department_Id'], $data['Unit_Id'], $data['Position_Id'],$data['Username'],
-		$data['Pwd'],$data['User_Type_id']],
-		'insert');
+		[$data['Employee_Id'], $data['Lastname'] , $data['Firstname'] ,$data['Middlename'], $data['Department_Id'], $data['Unit_Id'], $data['Position_Id'], $data['Username'], $data['Pwd'], $data['User_Type_Id']], 'insert');
+
 
 		return $usersQuery;
+
 	}
 
 	public function updateUser($id, $data)
 	{
-		$sql = "UPDATE `users` SET Username = ?, Pword = ?, User_Type = ?, name = ?, department = ? WHERE User_Id = ?";
+		$sql = " UPDATE `users` SET Employee_Id = ?, Lastname= ?, Firstname= ?, Middlename= ?,Department_Id= ?,Unit_Id= ?, Position_Id= ?, Username= ?, Pwd= ?, User_Type_Id = ?  WHERE User_Id = ? ";
 
 		$usersQuery = (new Database())->query(
 			$sql,
-			[$data['Username'], $data['Pword'], $data['User_Type'], $data['name'], $data['department'], $id],
+			[ $data['Employee_Id'], $data['Lastname'] , $data['Firstname'] ,$data['Middlename'], $data['Department_Id'],
+			$data['Unit_Id'], $data['Position_Id'], $data['Username'], $data['Pwd'], $data['User_Type_Id'], $id ],
 			'update'
 		);
 
@@ -61,10 +59,24 @@ class User {
 	}
 
 	public function success()
-	{
-		echo "Sample";
+    {
 
-	}
+        $this->data=array(
+            "status" => true,
+            "message" => "Done!",
+		);
 
+        echo json_encode($this->data);
+    }
+    public function failed()
+    {
+
+        $this->data=array(
+            "status" => fasle,
+            "message" => "Cannot be inserted!",
+        );
+
+        echo json_encode($this->data);
+    }
 
 }
