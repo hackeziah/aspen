@@ -31,6 +31,7 @@ class Database
 	 * @param string $function  'select', 'insert', 'update', 'delete', 'execute'
 	 * @return array
 	 */
+
 	public function query($sql, $data = [], $function = 'select') {
 		return (new Query($this->connection(), $sql))->{$function}($data);
 	}

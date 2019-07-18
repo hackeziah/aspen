@@ -41,7 +41,6 @@ class Category
 	{
 
 		$sql = "INSERT INTO categories(Name, Description) VALUE(?, ?)";
-
 		$catQuery = (new Database())->query(
 			$sql,
 			[$data['Name'], $data['Description']],
@@ -58,7 +57,5 @@ class Category
 
         return  $catQuery;
     }
-
-
 
 }

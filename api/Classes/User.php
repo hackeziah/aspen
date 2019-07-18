@@ -3,6 +3,11 @@ include '..\..\config\Database.php';
 
 class User {
 
+
+	public function mailer(){
+
+	}
+
 	public function getUsers()
 	{
 		$sql = " SELECT u.Employee_Id, u.Lastname, u.Firstname, u.Middlename, a.Name,b.Unit_Name,c.Position_Name,u.Username,u.Pwd,d.Name
