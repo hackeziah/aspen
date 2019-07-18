@@ -28,7 +28,6 @@ switch($action) {
 			break;
 
 	case 'addUser':
-
 			$data =[
 					'Employee_Id' => isset($_POST['Employee_Id']) ? $_POST['Employee_Id'] : '',
 					'Lastname' => isset($_POST['Lastname']) ? $_POST['Lastname'] : '',
