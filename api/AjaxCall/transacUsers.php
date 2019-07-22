@@ -19,8 +19,20 @@ switch($action) {
 			echo json_encode($result);
   		break;
 
-	case 'getSingleUser':
+	case 'sendmailer':
+		  $users = new User();
+		  $users->mailer();
+		  break;
 
+	case 'verifyNumber':
+		//   $verification = isset($_POST["verification"]) ? $_POST["verification"]: die();
+		  $verification_number = isset($_POST['verification_number']) ? $_POST['verification_number'] : '';
+		  $users = new User();
+		  $result = $users->verification_confirm($verification_number);
+		  echo json_encode($result);
+		  break;
+
+	case 'getSingleUser':
 			$users = new User();
 			$id = isset($_POST['User_Id']) ? $_POST['User_Id'] : '';
 			$result = $users->getSingleUser($id);
@@ -28,7 +40,6 @@ switch($action) {
 			break;
 
 	case 'addUser':
-
 			$data =[
 					'Employee_Id' => isset($_POST['Employee_Id']) ? $_POST['Employee_Id'] : '',
 					'Lastname' => isset($_POST['Lastname']) ? $_POST['Lastname'] : '',
@@ -45,7 +56,6 @@ switch($action) {
 			$users = new User();
 			$result = $users->addUser($data);
 			break;
-
 
 	case 'deleteSingleUser':
 			$id = isset($_POST['User_Id']) ? $_POST['User_Id'] : die;
@@ -75,6 +85,7 @@ switch($action) {
 			$result = $users->updateUser($id, $data);
 			echo json_encode($result);
 			break;
+
 
     default:
 			$result = "No value";
