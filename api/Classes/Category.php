@@ -6,7 +6,7 @@ class Category
     // `Category_Id`, `Name`, `Description`
     public function getCategory()
     {
-        $sql = " SELECT * FROM categories ";
+        $sql = " SELECT * FROM categories order by Category_Id asc ";
 		$catQuery = (new Database())->query($sql);
 
 		return $catQuery;

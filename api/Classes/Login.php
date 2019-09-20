@@ -17,7 +17,7 @@ class Login
     {
         $database = new Database();
         $db = $database->connection();
-        $sql = "SELECT * FROM users WHERE Username = :username AND Pword = :password";
+        $sql = "SELECT * FROM users WHERE Username = :username AND Pwd = :password";
         $stmt = $db->prepare($sql);
         $stmt->execute(array(':username' => $this->username, ':password' => $this->password));
         if($stmt->rowCount() > 0){
@@ -26,9 +26,8 @@ class Login
             // create arrayz
             $this->data=array(
                 "status" => true,
-                "message" => "Successfully Login!",
-                "username" => $row['Username'],
-                "User_Type" => $row['User_Type']
+                "message" => "",
+                "user_id" => $row['User_Id']
             );
         }
         else{
@@ -38,27 +37,9 @@ class Login
             );
         }
     }
-    public function correct()
-    {
-        if ($this->data['status']) {
-            return true;
-        }
-        return false;
+
+    public function getData() {
+        return $this->data;
     }
-    public function success()
-    {
-        if ($this->type == 'api') {
-            echo json_encode($this->data);
-        } else {
-            header('Location: /');
-        }
-    }
-    public function failed()
-    {
-        if ($this->type == 'api') {
-            echo json_encode($this->data);
-        } else {
-            header('Location: /');
-        }
-    }
+
 }

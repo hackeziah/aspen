@@ -8,7 +8,7 @@ class Department{
 
     public function getDepartment()
     {
-        $sql = " SELECT * FROM departments ";
+        $sql = " SELECT * FROM departments order by Department_Id asc";
 		$departQuery = (new Database())->query($sql);
 
 		return $departQuery;
