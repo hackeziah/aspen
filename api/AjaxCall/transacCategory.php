@@ -1,6 +1,6 @@
 <?php
 
-include '..\Classes\Category.php';
+include '../Classes/Category.php';
 
 $action = $_GET['action'];
 $result = [];
@@ -54,12 +54,12 @@ switch($action) {
 			echo json_encode($result);
 			break;
 
-
-	case 'searchCategory':
-			$category = new Category;
-			$result = $category->searchCategory($data);
-			echo json_encode($result);
-			break;
+	case 'doesCategoryExists':
+		$categoryName = isset($_POST['Category']) ? $_POST['Category'] : '';
+		$category = new Category();
+		$result = $category->doesCategoryExists($categoryName);
+		echo json_encode($result);
+  		break;
 
     default:
 			$result = "No value";

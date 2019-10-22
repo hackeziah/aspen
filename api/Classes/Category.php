@@ -1,14 +1,13 @@
 <?php
-include '..\..\config\Database.php';
+include '../../config/Database.php';
 
 class Category
 {
     // `Category_Id`, `Name`, `Description`
     public function getCategory()
     {
-        $sql = " SELECT * FROM categories order by Category_Id asc ";
+        $sql = " SELECT * FROM categories order by Category_Id DESC ";
 		$catQuery = (new Database())->query($sql);
-
 		return $catQuery;
     }
 
@@ -58,6 +57,17 @@ class Category
 
         return  $catQuery;
     }
+
+    public function doesCategoryExists($category) {
+		$result = [];
+		$sql = "SELECT * FROM categories where Name = ?";
+		$res = (new Database())->query($sql, [$category], 'select');
+		if(count($res) > 0) {	
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 
 

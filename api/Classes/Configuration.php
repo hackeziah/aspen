@@ -1,5 +1,6 @@
 <?php
-include '..\..\config\Database.php';
+include '../../config/Database.php';
+require_once('./../../libs/DBBackup.class.php');
 
 class Configuration {
 
@@ -59,5 +60,36 @@ class Configuration {
 
 		return $result;
 	}
+
+	public function backupDatabase() {
+		$db = new DBBackup(array(
+		    'driver' => 'mysql',
+		    'host' => 'localhost',
+		    'user' => 'root',
+		    'password' => '',
+		    'database' => 'support_ticket'
+		));
+		$backup = $db->backup();
+		if(!$backup['error']){
+		    // If there isn't errors, show the content
+		    // The backup will be at $var['msg']
+		    // You can do everything you want to. Like save in a file.
+		    $fp = fopen('db-backup-'.time().'.sql','a+');
+		    fwrite($fp, $backup['msg']);
+		    fclose($fp);
+		    // echo nl2br($backup['msg']);
+		    // echo $fp;
+		    echo "backup successfully ";
+		} else {
+		    echo 'An error has ocurred.';
+		}
+	}
+
+
+
+
+
+
+
 
 }

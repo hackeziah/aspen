@@ -1,70 +1,142 @@
 <?php
 
-include '..\Classes\Ticket.php';
+include '../Classes/Ticket.php';
 
-$action = $_GET['action'];
+$ticket = new Ticket();
+$action = $_REQUEST['action'];
 $result = [];
 
 switch($action) {
 
 	case 'addTicket':
+		$token = $_POST["Token"];
 		$data =[
-		 	'Subject' => isset($_POST['Subject']) ? $_POST['Subject'] : '',
-            'Category_Id' => isset($_POST['Category_Id']) ? $_POST['Category_Id'] : '',
-            'Priority_Id' => isset($_POST['Priority_Id']) ? $_POST['Priority_Id'] : '',
+		 	'Issue' => isset($_POST['Issue']) ? $_POST['Issue'] : '',
             'Description' => isset($_POST['Description']) ? $_POST['Description'] : '',
-            'CreatedBy' => isset($_POST['CreatedBy']) ? $_POST['CreatedBy'] : '',
-            'Status' => isset($_POST['Status']) ? $_POST['Status'] : ''
+            'Category_Id' => isset($_POST['Category_Id']) ? $_POST['Category_Id'] : ''
 		];
-		$ticket = new Ticket();
-		$result = $ticket->addTicket($data);
+		$level = isset($_POST['Level']) ? $_POST['Level'] : '';
+		$result = $ticket->addTicket($token, $data, $level);
 		break;
 
 	case 'getAllTickets':
-		$ticket = new Ticket();
 		$result = $ticket->getAllTickets();
+		// print_r($result);
   		break;
 
   	case 'getSupportedTickets':
-		$ticket = new Ticket();
-		$id = isset($_POST['User_Id']) ? $_POST['User_Id'] : die;
-		$result = $ticket->getSupportedTickets($id);
+		$token = isset($_POST['Token']) ? $_POST['Token'] : die;
+		$result = $ticket->getSupportedTickets($token);
 		break;
 
 	case 'getIssuedTickets':
-		$ticket = new Ticket();
-		$id = isset($_POST['User_Id']) ? $_POST['User_Id'] : die;
-		$result = $ticket->getIssuedTickets($id);
+		$token = isset($_POST['Token']) ? $_POST['Token'] : die;
+		$result = $ticket->getIssuedTickets($token);
 		break;
 
 	case 'getSingleTicket':
-		$ticket = new Ticket();
 		$id = isset($_POST['Ticket_Id']) ? $_POST['Ticket_Id'] : die;
 		$result = $ticket->getSingleTicket($id);
 		break;
 
-	case 'updateIssue':
-		$id = isset($_POST['Issue_Id']) ? $_POST['Issue_Id'] : die;
+	case 'getTotalTickets':
+		$type = isset($_REQUEST['Type']) ? $_REQUEST['Type'] : die;
+		$filteredDate = isset($_REQUEST['Filtered_Date']) ? $_REQUEST['Filtered_Date'] : die;
+		$token = isset($_REQUEST['Token']) ? $_REQUEST['Token'] : die;
+		$result = $ticket->getTotalTickets($filteredDate, $type, $token);
+		break;
+
+	case 'getTicketComments':
+		$ticketId = isset($_POST['Ticket_Id']) ? $_POST['Ticket_Id'] : die;
+		$result = $ticket->getTicketComments($ticketId);
+		break;
+
+	case 'updateTicket':
+		$id = isset($_POST['Ticket_Id']) ? $_POST['Ticket_Id'] : "";
 		$data =[
-		 	'Name' => isset($_POST['Name']) ? $_POST['Name'] : '',
-		 	'Category_Id' => isset($_POST['Category_Id']) ? $_POST['Category_Id'] :'',
-            'Priority_Id' => isset($_POST['Priority_Id']) ? $_POST['Priority_Id'] : '',
-            'Description' => isset($_POST['Description']) ? $_POST['Description'] : ''
+		 	'Issue' => isset($_POST['Issue']) ? $_POST['Issue'] : '',
+            'Description' => isset($_POST['Description']) ? $_POST['Description'] : '',
+            'Solution' => isset($_POST['Solution']) ? $_POST['Solution'] : '',
+            'CreatedBy' => isset($_POST['CreatedBy']) ? $_POST['CreatedBy'] : '',
+            'SupportedBy' => isset($_POST['SupportedBy']) ? $_POST['SupportedBy'] : '',
+            'DateCreated' => isset($_POST['DateCreated']) ? $_POST['DateCreated'] : '',
+            'HourCreated' => isset($_POST['HourCreated']) ? $_POST['HourCreated'] : '',
+            'MinuteCreated' => isset($_POST['MinuteCreated']) ? $_POST['MinuteCreated'] : '',
+            'DateClosed' => isset($_POST['DateClosed']) ? $_POST['DateClosed'] : '',
+            'HourClosed' => isset($_POST['HourClosed']) ? $_POST['HourClosed'] : '',
+            'MinuteClosed' => isset($_POST['MinuteClosed']) ? $_POST['MinuteClosed'] : '',
+            'Status' => isset($_POST['Status']) ? $_POST['Status'] : ''
 		];
-		$issue = new Issue();
-		$result = $issue->updateIssue($id, $data);
+		$data["SupportedBy"] = ($data["SupportedBy"]=='null')? null: $data["SupportedBy"];
+		$result = $ticket->updateTicket($id, $data);
+		break;
+
+	case 'updateRating':
+		$id = isset($_POST['Ticket_Id']) ? $_POST['Ticket_Id'] : "";
+		$rate = isset($_POST['Rate']) ? $_POST['Rate'] : "";
+		$result = $ticket->updateRating($id, $rate);
+		break;
+
+	case 'updateReassignment':
+		$id = isset($_POST['Ticket_Id']) ? $_POST['Ticket_Id'] : "";
+		$value = isset($_POST['Value']) ? $_POST['Value'] : "";
+		$result = $ticket->updateReassignment($id, $value);
+		break;
+
+	case 'updateTicketStatus':
+		$id = isset($_REQUEST['Ticket_Id']) ? $_REQUEST['Ticket_Id'] : "";
+        $status = isset($_REQUEST['Status']) ? $_REQUEST['Status'] : '';
+        $solution = isset($_REQUEST['Solution']) ? $_REQUEST['Solution'] : '';
+		$result = $ticket->updateTicketStatus($id, $status, $solution);
+		break;
+
+	case 'reassignUserTicket':
+		$id = isset($_POST['Ticket_Id']) ? $_POST['Ticket_Id'] : "";
+        $supportedBy = isset($_POST['Supported_By']) ? $_POST['Supported_By'] : '';
+        $category = isset($_POST['Category_Id']) ? $_POST['Category_Id'] : '';
+        $level = isset($_POST['Level']) ? $_POST['Level'] : '';
+		$result = $ticket->reassignUserTicket($id, $supportedBy, $category, $level);
 		break;
 
 	case 'deleteTicket':
 		$id = isset($_POST['Ticket_Id']) ? $_POST['Ticket_Id'] : die;
-		$ticket = new Ticket();
 		$ticket->deleteTicket($id);
 		break;
 
+	case 'insertComment':
+		$ticketid = isset($_POST['Ticket_Id']) ? $_POST['Ticket_Id'] : die;
+		$comment = isset($_POST['Comment']) ? $_POST['Comment'] : die;
+		$token = isset($_POST['Token']) ? $_POST['Token'] : die;
+		$ticket->insertComment($ticketid, $comment, $token);
+		break;
 
-	case 'searchIssue':
-		$issue = new Issue;
-		$result = $issue->searchIssue($data);
+	case 'isTicketIssued': 
+		$ticketid = isset($_POST['Ticket_Id']) ? $_POST['Ticket_Id'] : die;
+		$token = isset($_POST['Token']) ? $_POST['Token'] : die;
+		$result = $ticket->isTicketIssued($ticketid, $token);
+		break;
+
+	case 'isTicketSupported': 
+		$ticketid = isset($_POST['Ticket_Id']) ? $_POST['Ticket_Id'] : die;
+		$token = isset($_POST['Token']) ? $_POST['Token'] : die;
+		$result = $ticket->isTicketSupported($ticketid, $token);
+		break;
+
+	case 'updateReassignmentReason': 
+		$ticketid = isset($_POST['Ticket_Id']) ? $_POST['Ticket_Id'] : die;
+		$reason = isset($_POST['Reason']) ? $_POST['Reason'] : die;
+		$ticket->updateReassignmentReason($ticketid, $reason);
+		break;
+
+	case 'reopeningOfTicket': 
+		$ticketid = isset($_POST['Ticket_Id']) ? $_POST['Ticket_Id'] : die;
+		$reason = isset($_POST['Reason']) ? $_POST['Reason'] : die;
+		$ticket->reopeningOfTicket($ticketid, $reason);
+		break;
+
+	case 'getIssuedSupportedRecentTickets': 
+		$token = isset($_POST['Token']) ? $_POST['Token'] : die;
+		$result = $ticket->getIssuedSupportedRecentTickets($token);
 		break;
 
     default:

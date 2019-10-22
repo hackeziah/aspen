@@ -1,6 +1,6 @@
 <?php
 
-include '..\Classes\Configuration.php';
+include '../Classes/Configuration.php';
 
 
 $action = isset($_GET['action']) ? $_GET['action'] : die;
@@ -65,6 +65,11 @@ switch($action) {
 			$result = $config->updateConfigurations($id, $data);
 			echo json_encode($result);
 			break;
+
+	case 'backupDatabase':
+		$config = new Configuration();
+		$config->backupDatabase();
+		break;
 
     default:
 			$result = "No value";

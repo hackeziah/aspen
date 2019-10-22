@@ -1,6 +1,6 @@
 <?php
 
-include '..\Classes\Position.php';
+include '../Classes/Position.php';
 
 $action = isset($_GET['action']) ? $_GET['action'] : die;
 $result = [];
@@ -29,7 +29,8 @@ switch($action) {
 			$id = isset($_POST['Position_Id']) ? $_POST['Position_Id'] : die;
 			$data =[
 		 			'Position_Name' => isset($_POST['Position_Name']) ? $_POST['Position_Name'] : '',
-                    'Position_Desc' => isset($_POST['Position_Desc']) ? $_POST['Position_Desc'] : ''
+                    'Position_Desc' => isset($_POST['Position_Desc']) ? $_POST['Position_Desc'] : '',
+                    'Department' => isset($_POST['Department']) ? $_POST['Department'] : ''
 				 ];
 
 			$position = new Position();
@@ -40,7 +41,8 @@ switch($action) {
 	case 'addPosition':
 			$data =[
 		 			 'Position_Name' => isset($_POST['Position_Name']) ? $_POST['Position_Name'] : die,
-                     'Position_Desc' => isset($_POST['Position_Desc']) ? $_POST['Position_Desc'] : die
+                     'Position_Desc' => isset($_POST['Position_Desc']) ? $_POST['Position_Desc'] : die,
+                     'Department' => isset($_POST['Department']) ? $_POST['Department'] : die
 				 ];
 
 			$position = new Position();
@@ -56,11 +58,12 @@ switch($action) {
 			break;
 
 
-	case 'searchPosition':
-			$position = new Position;
-			$result = $position->searchPosition($data);
-			echo json_encode($result);
-			break;
+	case 'doesPositionExists':
+		$positionName = isset($_POST['Position']) ? $_POST['Position'] : '';
+		$position = new Position();
+		$result = $position->doesPositionExists($positionName);
+		echo json_encode($result);
+  		break;
 
     default:
 			$result = "No value";

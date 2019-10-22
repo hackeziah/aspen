@@ -1,45 +1,85 @@
 <?php
-include '..\..\config\Database.php';
-class Login
+require_once("User.php");
+require_once("Jwt_key.php");
+
+class Login extends User
 {
-    private $username;
-    private $password;
-    private $type;
-    private $data;
-    public function __construct($username, $password,$type = 'api')
-    {
-        $this->username = $username;
-        $this->password = $password;
-        $this->type = $type;
-        $this->login();
+
+    private $jwt;
+
+    public function __construct() {
+        $this->jwt = new JWT_Key();
     }
-    private function login()
+
+    public function checkLogin($username, $password)
     {
         $database = new Database();
         $db = $database->connection();
-        $sql = "SELECT * FROM users WHERE Username = :username AND Pwd = :password";
+        $sql = "SELECT u.User_Id, u.Role, a.Is_Activated
+                from users u 
+                INNER JOIN activation a on u.User_Id = a.User_Id
+                where u.Username = :username AND
+                u.Pwd = :password;";
         $stmt = $db->prepare($sql);
-        $stmt->execute(array(':username' => $this->username, ':password' => $this->password));
-        if($stmt->rowCount() > 0){
-            // get retrieved row
+        $stmt->execute(array(':username' => $username, ':password' => $password));
+        if($stmt->rowCount() > 0) {
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
-            // create arrayz
-            $this->data=array(
-                "status" => true,
+            $token = array(
+                "id" => $row['User_Id'],
+                "role" => $row["Role"]
+            );
+            $data = array(
                 "message" => "",
-                "user_id" => $row['User_Id']
+                "token" => $this->jwt->encodeToken($token),
+                "userId" => $row['User_Id'],
+                "isActivated" => $row["Is_Activated"]
             );
         }
-        else{
-            $this->data=array(
-                "status" => false,
+        else {
+            $data = array(
                 "message" => "Invalid Username or Password!",
             );
         }
+        return $data;
     }
 
-    public function getData() {
-        return $this->data;
+    public function verifyCode($user_id, $Verification_Code)
+    {
+        $sql = "UPDATE activation 
+                SET Is_Activated = 1 
+                WHERE Verification_Code = ? AND 
+                User_Id = ?";
+        $res = (new Database())->query($sql, [$Verification_Code, $user_id],'update');
+        if ($res['affected_rows'] != 0){
+            $data = array(
+                'message' => true
+            );
+        } else {
+            $data = array(
+                'message' => false
+            );
+        }
+        return $data;
+    }
+
+    public function resendCode($user_id) {
+        $database = new Database();
+        $db = $database->connection();
+        $sql = "SELECT a.Verification_Code, u.Company_Email
+                from activation a
+                INNER JOIN users u on u.User_Id = a.User_Id
+                where a.User_Id = :userId";
+        $stmt = $db->prepare($sql);
+        $stmt->execute(array(':userId' => $user_id));
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $subject = "Verification Number";
+        $body = 'This is verification '.$row["Verification_Code"];
+        $this->sendVerificationCode($row["Company_Email"], $subject, $body);
+    }
+
+    public function getRole($token) {
+        $tokenArray = $this->jwt->decodeToken($token);
+        return $tokenArray->role;
     }
 
 }

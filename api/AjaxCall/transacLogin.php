@@ -1,16 +1,34 @@
 <?php
 
 include '../Classes/Login.php';
-$username = (isset($_POST["username"])) ? $_POST["username"]: "";
-$password = (isset($_POST["password"])) ? $_POST["password"]: "";
-$login = new Login($username,$password);
-$result = [];
 
+$login = new Login();
+$result = [];
 $action = $_REQUEST['action'];
+
 switch ($action) {
-   case 'login':
-      $result = $login->getData();
-   break;
+
+   	case 'login':
+   		$username = (isset($_REQUEST["username"])) ? $_REQUEST["username"]: "";
+		   $password = (isset($_REQUEST["password"])) ? $_REQUEST["password"]: "";
+    	   $result = $login->checkLogin($username, $password);
+   		break;
+
+   	case 'verifyCode': 
+   		$user_id = (isset($_POST["User_Id"])) ? $_POST["User_Id"]: "";
+		   $code = (isset($_POST["Code"])) ? $_POST["Code"]: "";
+   		$result = $login->verifyCode($user_id, $code);
+   		break;
+
+   	case 'resendCode':
+   		$user_id = (isset($_REQUEST["User_Id"])) ? $_REQUEST["User_Id"]: "";
+   		$result = $login->resendCode($user_id);
+   		break;
+
+      case 'getRole':
+         $token = (isset($_REQUEST["Token"])) ? $_REQUEST["Token"]: "";
+         $result = $login->getRole($token);
+         break;
 }
 
 echo json_encode($result);

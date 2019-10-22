@@ -1,5 +1,5 @@
 <?php
-include '..\..\config\Database.php';
+include '../../config/Database.php';
 
 class Department{
 
@@ -8,9 +8,8 @@ class Department{
 
     public function getDepartment()
     {
-        $sql = " SELECT * FROM departments order by Department_Id asc";
+        $sql = " SELECT * FROM departments order by Department_Id DESC";
 		$departQuery = (new Database())->query($sql);
-
 		return $departQuery;
     }
 
@@ -58,19 +57,16 @@ class Department{
         return  $departQuery;
     }
 
-    // public function searchDepartment($data)
-    // {
-    //     $sql=" SELECT * FROM department WHERE fname like '%".$name."%' OR user_email like '%".$email."%'";
-
-    //     $departQuery = (new Database())->query(
-	// 		$sql,
-	// 		[$data['Name'],$data['Description']],
-	// 		'insert'
-	// 	);
-
-    //     return $departQuery;
-    // }
-
+    public function doesDepartmentExists($department) {
+		$result = [];
+		$sql = "SELECT * FROM departments where Name = ?";
+		$res = (new Database())->query($sql, [$department], 'select');
+		if(count($res) > 0) {	
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 
 }

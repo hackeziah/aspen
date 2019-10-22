@@ -1,6 +1,6 @@
 <?php
 
-include '..\Classes\Department.php';
+include '../Classes/Department.php';
 
 $action = $_GET['action'];
 $result = [];
@@ -50,11 +50,12 @@ switch($action) {
 			echo json_encode($result);
 			break;
 
-	case 'searchDepartment':
-			$depart = new Department;
-			$result = $depart-searchDepartment($data);
-			echo json_encode($result);
-			break;
+	case 'doesDepartmentExists':
+		$department = isset($_POST['Department']) ? $_POST['Department'] : '';
+		$depart = new Department();
+		$result = $depart->doesDepartmentExists($department);
+		echo json_encode($result);
+  		break;
 
     default:
 			$result = "No value";
